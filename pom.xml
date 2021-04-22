@@ -6,7 +6,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>boss-core</module>
-        <module>boss-controller</module>
+        <module>boss-transaction-service</module>
     </modules>
 
     <groupId>org.example</groupId>

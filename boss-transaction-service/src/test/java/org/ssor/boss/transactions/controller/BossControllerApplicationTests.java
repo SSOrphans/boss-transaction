@@ -1,4 +1,4 @@
-package org.ssor.controller;
+package org.ssor.boss.transactions.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
