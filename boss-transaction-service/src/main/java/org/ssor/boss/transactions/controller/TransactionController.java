@@ -25,10 +25,10 @@ public class TransactionController
   TransactionService transactionService;
 
   @GetMapping(value = "")
-  public List<Transaction> getTransactions(@PathParam("keyword") Optional<String> keyword, @PathVariable Optional<Integer> accountId) throws
+  public List<Transaction> getTransactions(@PathParam("keyword") Optional<String> keyword, @PathParam("page") Optional<Integer> page, @PathVariable Optional<Integer> accountId) throws
       NoTransactionFoundException
   {
-    List<Transaction> unsortedTransactions = transactionService.fetchTransactions(keyword,
+    List<Transaction> unsortedTransactions = transactionService.fetchTransactions(keyword, page,
                                                                                   accountId);
     return unsortedTransactions.stream().sorted(Comparator.comparing(Transaction::getDate).reversed()).collect(Collectors.toList());
   }

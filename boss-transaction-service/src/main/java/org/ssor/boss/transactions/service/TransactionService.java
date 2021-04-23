@@ -1,6 +1,8 @@
 package org.ssor.boss.transactions.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.ssor.boss.entity.Transaction;
 import org.ssor.boss.exception.NoTransactionFoundException;
@@ -15,36 +17,32 @@ public class TransactionService
   @Autowired
   TransactionRepository transactionRepository;
 
-
-  public Transaction fetchAccountTransactionById(Optional<Integer> id, Optional<Integer> accountId) throws
-      NoTransactionFoundException
+  public Transaction fetchAccountTransactionById(Optional<Integer> id, Optional<Integer> accountId)
+      throws NoTransactionFoundException
   {
     Optional<Transaction> savingTransaction =
         Optional.ofNullable(
-            transactionRepository.findTransactionById(id.orElseThrow(NoTransactionFoundException::new), accountId.orElseThrow(NoTransactionFoundException::new)));
+            transactionRepository.findTransactionById(id.orElseThrow(NoTransactionFoundException::new),
+                                                      accountId.orElseThrow(NoTransactionFoundException::new)));
     return savingTransaction.orElseThrow(NoTransactionFoundException::new);
   }
 
-  public List<Transaction> fetchTransactions(Optional<String> keyword, Optional<Integer> accountId) throws
-      NoTransactionFoundException
+
+  public List<Transaction> fetchTransactions(Optional<String> keyword, Optional<Integer> page, Optional<Integer> accountId)
+      throws NoTransactionFoundException
   {
     List<Transaction> transactions;
+    Pageable pageable = PageRequest.of(page.orElse(0), 5);
     if (keyword.isEmpty())
-    {
       transactions = transactionRepository
-          .findTransactionsByAccountId(accountId.orElseThrow(NoTransactionFoundException::new));
-    }
+          .findTransactionsByAccountId(accountId.orElseThrow(NoTransactionFoundException::new), pageable);
     else
-    {
       transactions = transactionRepository
           .findTransactionsByAccountIdLikeMerchantName(accountId.orElseThrow(NoTransactionFoundException::new),
-                                                       keyword.get());
-    }
+                                                       keyword.get(), pageable);
 
     if (transactions.isEmpty())
-    {
       throw new NoTransactionFoundException();
-    }
 
     return transactions;
   }
