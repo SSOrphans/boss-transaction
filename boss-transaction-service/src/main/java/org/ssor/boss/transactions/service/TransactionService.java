@@ -20,11 +20,11 @@ public class TransactionService
   public Transaction fetchAccountTransactionById(Optional<Integer> id, Optional<Integer> accountId)
       throws NoTransactionFoundException
   {
-    Optional<Transaction> savingTransaction =
+    Optional<Transaction> transaction =
         Optional.ofNullable(
             transactionRepository.findTransactionById(id.orElseThrow(NoTransactionFoundException::new),
                                                       accountId.orElseThrow(NoTransactionFoundException::new)));
-    return savingTransaction.orElseThrow(NoTransactionFoundException::new);
+    return transaction.orElseThrow(NoTransactionFoundException::new);
   }
 
 
