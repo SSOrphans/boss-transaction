@@ -10,12 +10,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EntityScan(basePackages = "org.ssor.boss.*")
 @EnableJpaRepositories(basePackages = "org.ssor.boss.*")
 @EnableSwagger2
-public class BossControllerApplication
+public class BossTransactionApplication
 {
 
   public static void main(String[] args)
   {
-    SpringApplication.run(BossControllerApplication.class, args);
+    SpringApplication.run(BossTransactionApplication.class, args);
   }
 
 }
