@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
+public
 class RestErrorHandlerTest
 {
   @InjectMocks

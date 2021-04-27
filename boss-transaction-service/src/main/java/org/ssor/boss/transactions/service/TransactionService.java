@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.ssor.boss.entity.Transaction;
+import org.ssor.boss.core.entity.Transaction;
 import org.ssor.boss.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.repository.TransactionRepository;
 
