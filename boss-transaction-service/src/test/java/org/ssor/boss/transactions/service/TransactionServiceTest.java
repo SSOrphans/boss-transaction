@@ -64,7 +64,7 @@ public class TransactionServiceTest
            .findTransactionsByAccountId(Mockito.anyInt(), Mockito.any());
 
     List<Transaction> actualTransactions = transactionService
-        .fetchTransactions(Optional.empty(), Optional.of(0), Optional.of(1));
+        .fetchTransactions(Optional.empty(), Optional.of(0), Optional.of(10), Optional.of(1));
 
     assertEquals(stubbedTransactions, actualTransactions);
   }
@@ -77,7 +77,7 @@ public class TransactionServiceTest
            .findTransactionsByAccountIdLikeMerchantName(Mockito.anyInt(), Mockito.any(), Mockito.any());
 
     List<Transaction> actualTransactions = transactionService
-        .fetchTransactions(Optional.of("KeyTest"), Optional.of(0), Optional.of(1));
+        .fetchTransactions(Optional.of("KeyTest"), Optional.of(0), Optional.of(10), Optional.of(1));
 
     assertEquals(stubbedTransactions, actualTransactions);
   }
@@ -114,7 +114,7 @@ public class TransactionServiceTest
   void test_willThrowExceptionOnBadAccountIdFetchTransactions()
   {
     Exception exception = assertThrows(NoTransactionFoundException.class, () ->
-        transactionService.fetchTransactions(Optional.of("TestKeyword"), Optional.of(0), Optional.of(-1))
+        transactionService.fetchTransactions(Optional.of("TestKeyword"), Optional.of(0), Optional.of(10),Optional.of(-1))
     );
 
     String expectedMessage = "No Transaction Found";

@@ -28,11 +28,11 @@ public class TransactionService
   }
 
 
-  public List<Transaction> fetchTransactions(Optional<String> keyword, Optional<Integer> page, Optional<Integer> accountId)
+  public List<Transaction> fetchTransactions(Optional<String> keyword, Optional<Integer> offset, Optional<Integer> limit, Optional<Integer> accountId)
       throws NoTransactionFoundException
   {
     List<Transaction> transactions;
-    Pageable pageable = PageRequest.of(page.orElse(0), 5);
+    Pageable pageable = PageRequest.of(offset.orElse(0), limit.orElse(5));
     if (keyword.isEmpty())
       transactions = transactionRepository
           .findTransactionsByAccountId(accountId.orElseThrow(NoTransactionFoundException::new), pageable);
