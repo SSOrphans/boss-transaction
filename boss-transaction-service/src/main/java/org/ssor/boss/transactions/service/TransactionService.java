@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 import org.ssor.boss.core.entity.Transaction;
 import org.ssor.boss.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.repository.TransactionRepository;
+import org.ssor.boss.transactions.transfer.TransactionTransfer;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class TransactionService
@@ -17,29 +20,43 @@ public class TransactionService
   @Autowired
   TransactionRepository transactionRepository;
 
-  public Transaction fetchAccountTransactionById(Optional<Integer> id, Optional<Integer> accountId)
+  public TransactionTransfer fetchAccountTransactionById(Optional<Integer> id, Optional<Integer> accountId)
       throws NoTransactionFoundException
   {
     Optional<Transaction> transaction =
         Optional.ofNullable(
             transactionRepository.findTransactionById(id.orElseThrow(NoTransactionFoundException::new),
                                                       accountId.orElseThrow(NoTransactionFoundException::new)));
-    return transaction.orElseThrow(NoTransactionFoundException::new);
+    return new TransactionTransfer(transaction.orElseThrow(NoTransactionFoundException::new));
   }
 
 
-  public List<Transaction> fetchTransactions(Optional<String> keyword, Optional<Integer> offset, Optional<Integer> limit, Optional<Integer> accountId)
+  public List<TransactionTransfer> fetchTransactions(Optional<String> keyword, Optional<Integer> offset, Optional<Integer> limit, Optional<Integer> accountId)
       throws NoTransactionFoundException
   {
-    List<Transaction> transactions;
-    Pageable pageable = PageRequest.of(offset.orElse(0), limit.orElse(5));
+    final List<TransactionTransfer> transactions = new ArrayList<>();
+    List<Transaction> rawTransactions;
+    Pageable pageable = PageRequest.of(
+      offset
+          .orElse(0),
+      limit
+          .map(optLimitNotZero -> optLimitNotZero < 1? 1 : optLimitNotZero)
+          .orElse(5)
+    );
+
     if (keyword.isEmpty())
-      transactions = transactionRepository
+    {
+       rawTransactions = transactionRepository
           .findTransactionsByAccountId(accountId.orElseThrow(NoTransactionFoundException::new), pageable);
+    }
     else
-      transactions = transactionRepository
+    {
+      rawTransactions = transactionRepository
           .findTransactionsByAccountIdLikeMerchantName(accountId.orElseThrow(NoTransactionFoundException::new),
                                                        keyword.get(), pageable);
+    }
+
+    rawTransactions.forEach(raw -> transactions.add(new TransactionTransfer(raw)));
 
     if (transactions.isEmpty())
       throw new NoTransactionFoundException();

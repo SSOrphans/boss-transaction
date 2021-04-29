@@ -35,19 +35,31 @@ class TransactionControllerTest
   @BeforeAll
   static void setUp()
   {
-    Transaction transaction = new Transaction();
+    Transaction transactionA = new Transaction();
 
-    transaction.setSucceeded(true);
-    transaction.setAtmTransactionId(1);
-    transaction.setPending(false);
-    transaction.setDate(LocalDateTime.now());
-    transaction.setOverdraftId(1);
-    transaction.setAmount(123.45f);
-    transaction.setId(1);
-    transaction.setMerchantName("Stubbed Merchant");
-    transaction.setNewBalance(12345.67f);
+    transactionA.setSucceeded(true);
+    transactionA.setAtmTransactionId(1);
+    transactionA.setPending(false);
+    transactionA.setDate(LocalDateTime.now());
+    transactionA.setOverdraftId(1);
+    transactionA.setAmount(123.45f);
+    transactionA.setId(1);
+    transactionA.setMerchantName("Stubbed Merchant");
+    transactionA.setNewBalance(12345.67f);
 
-    stubbedTransaction = transaction;
+    Transaction transactionB = new Transaction();
+
+    transactionB.setSucceeded(true);
+    transactionB.setAtmTransactionId(1);
+    transactionB.setPending(false);
+    transactionB.setDate(LocalDateTime.now());
+    transactionB.setOverdraftId(1);
+    transactionB.setAmount(123.45f);
+    transactionB.setId(1);
+    transactionB.setMerchantName("Stubbed Merchant");
+    transactionB.setNewBalance(12345.67f);
+
+    stubbedTransaction = transactionA;
     stubbedTransactions = new ArrayList<>();
     stubbedTransactions.add(stubbedTransaction);
   }
