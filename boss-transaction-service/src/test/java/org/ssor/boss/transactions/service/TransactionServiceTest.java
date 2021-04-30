@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.ssor.boss.core.entity.Transaction;
-import org.ssor.boss.exception.NoTransactionFoundException;
+import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.repository.TransactionRepository;
 import org.ssor.boss.transactions.transfer.TransactionTransfer;
 

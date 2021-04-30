@@ -5,7 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.ssor.boss.core.entity.Transaction;
-import org.ssor.boss.exception.NoTransactionFoundException;
+import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.repository.TransactionRepository;
 import org.ssor.boss.transactions.transfer.TransactionTransfer;
 

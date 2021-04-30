@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.ssor.boss.exception.BadRouteException;
-import org.ssor.boss.exception.NoTransactionFoundException;
+import org.ssor.boss.core.exception.BadRouteException;
+import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.transfer.ErrorMessage;
 
 @RestControllerAdvice

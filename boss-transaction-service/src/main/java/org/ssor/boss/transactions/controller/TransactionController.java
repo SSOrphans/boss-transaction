@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.ssor.boss.core.entity.Transaction;
-import org.ssor.boss.exception.NoTransactionFoundException;
+import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.service.TransactionService;
 import org.ssor.boss.transactions.transfer.TransactionTransfer;
 
