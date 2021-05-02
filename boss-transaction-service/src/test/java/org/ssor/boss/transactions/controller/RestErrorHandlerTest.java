@@ -6,8 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.ssor.boss.exception.BadRouteException;
-import org.ssor.boss.exception.NoTransactionFoundException;
+import org.ssor.boss.core.exception.BadRouteException;
+import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.transfer.ErrorMessage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
