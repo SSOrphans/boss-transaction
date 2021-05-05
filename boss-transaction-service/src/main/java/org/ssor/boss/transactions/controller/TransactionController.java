@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.ssor.boss.core.exception.NoTransactionFoundException;
+import org.ssor.boss.transactions.service.TransactionOptions;
 import org.ssor.boss.transactions.service.TransactionService;
 import org.ssor.boss.transactions.transfer.TransactionTransfer;
 
@@ -33,7 +34,14 @@ public class TransactionController
       @PathVariable Optional<Integer> accountId) throws
       NoTransactionFoundException
   {
-    List<TransactionTransfer> unsortedTransactions = transactionService.fetchTransactions(keyword, offset, limit, accountId);
+    TransactionOptions options = new TransactionOptions(
+        keyword.orElse(""),
+        filter.orElse(""),
+        offset.orElse(0),
+        limit
+            .map(optLimitNotZero -> optLimitNotZero < 1? 1 : optLimitNotZero)
+            .orElse(5));
+    List<TransactionTransfer> unsortedTransactions = transactionService.fetchTransactions(options, accountId);
     return unsortedTransactions.stream().sorted(Comparator.comparing(TransactionTransfer::getDate).reversed()).collect(Collectors.toList());
   }
 

@@ -30,20 +30,14 @@ public class TransactionService
   }
 
 
-  public List<TransactionTransfer> fetchTransactions(Optional<String> keyword, Optional<Integer> offset, Optional<Integer> limit, Optional<Integer> accountId)
+  public List<TransactionTransfer> fetchTransactions(TransactionOptions options, Optional<Integer> accountId)
       throws NoTransactionFoundException
   {
     final List<TransactionTransfer> transactions = new ArrayList<>();
     List<Transaction> rawTransactions;
-    Pageable pageable = PageRequest.of(
-      offset
-          .orElse(0),
-      limit
-          .map(optLimitNotZero -> optLimitNotZero < 1? 1 : optLimitNotZero)
-          .orElse(5)
-    );
+    Pageable pageable = PageRequest.of(options.getOffset(), options.getLimit());
 
-    if (keyword.isEmpty())
+    if (options.getKeyword().isEmpty())
     {
        rawTransactions = transactionRepository
           .findTransactionsByAccountId(accountId.orElseThrow(NoTransactionFoundException::new), pageable);
@@ -52,7 +46,7 @@ public class TransactionService
     {
       rawTransactions = transactionRepository
           .findTransactionsByAccountIdLikeMerchantName(accountId.orElseThrow(NoTransactionFoundException::new),
-                                                       keyword.get(), pageable);
+                                                       options.getKeyword(), pageable);
     }
 
     rawTransactions.forEach(raw -> transactions.add(new TransactionTransfer(raw)));

@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.ssor.boss.core.entity.TransactionType;
 import org.ssor.boss.transactions.BossControllerApplicationTests;
 import org.ssor.boss.core.entity.Transaction;
 
@@ -44,6 +45,7 @@ class TransactionRepositoryTest
     stubbedTransactionA.setPending(false);
     stubbedTransactionA.setSucceeded(true);
     stubbedTransactionA.setOverdraftId(null);
+    stubbedTransactionA.setType(TransactionType.TRANSACTION_DEPOSIT);
 
     stubbedTransactionB = new Transaction();
     stubbedTransactionB.setId(2);
@@ -56,14 +58,8 @@ class TransactionRepositoryTest
     stubbedTransactionB.setPending(true);
     stubbedTransactionB.setSucceeded(true);
     stubbedTransactionB.setOverdraftId(null);
+    stubbedTransactionB.setType(TransactionType.TRANSACTION_PAYMENT);
 
-  }
-
-  @Test
-  void test_canFindTransaction()
-  {
-    assertNotNull(transactionRepository.findTransactionById(1, 1));
-    assertNotNull(transactionRepository);
   }
 
   @Test
@@ -71,6 +67,12 @@ class TransactionRepositoryTest
   {
     Transaction transaction = transactionRepository.save(stubbedTransactionA);
     assertNotNull(transaction);
+  }
+
+  @Test
+  void test_canFindTransaction()
+  {
+    assertNotNull(transactionRepository.findTransactionById(1, 1));
   }
 
   @Test

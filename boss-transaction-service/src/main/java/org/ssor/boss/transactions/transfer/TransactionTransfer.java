@@ -2,7 +2,6 @@ package org.ssor.boss.transactions.transfer;
 
 import lombok.*;
 import org.ssor.boss.core.entity.Transaction;
-import org.ssor.boss.core.entity.TransactionType;
 
 import java.time.LocalDateTime;
 

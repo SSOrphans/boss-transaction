@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.ssor.boss.core.entity.Transaction;
+import org.ssor.boss.core.entity.TransactionType;
 import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.repository.TransactionRepository;
 import org.ssor.boss.transactions.transfer.TransactionTransfer;
@@ -50,6 +51,7 @@ public class TransactionServiceTest
     transactionA.setId(1);
     transactionA.setMerchantName("Stubbed Merchant");
     transactionA.setNewBalance(12345.67f);
+    transactionA.setType(TransactionType.TRANSACTION_PAYMENT);
 
     Transaction transactionB = new Transaction();
 
@@ -63,6 +65,7 @@ public class TransactionServiceTest
     transactionB.setId(1);
     transactionB.setMerchantName("Stubbed Another");
     transactionB.setNewBalance(12345.67f);
+    transactionB.setType(TransactionType.TRANSACTION_CHARGE);
 
     stubbedTransactionA = transactionA;
     stubbedTransactionB = transactionB;
@@ -80,7 +83,7 @@ public class TransactionServiceTest
            .findTransactionsByAccountId(Mockito.anyInt(), Mockito.any());
 
     List<TransactionTransfer> actualTransactions = transactionService
-        .fetchTransactions(Optional.empty(), Optional.of(0), Optional.of(10), Optional.of(1));
+        .fetchTransactions(new TransactionOptions("","",0,10), Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -97,7 +100,7 @@ public class TransactionServiceTest
            .findTransactionsByAccountIdLikeMerchantName(Mockito.anyInt(), Mockito.any(), Mockito.any());
 
     List<TransactionTransfer> actualTransactions = transactionService
-        .fetchTransactions(Optional.of("KeyTest"), Optional.of(0), Optional.of(10), Optional.of(1));
+        .fetchTransactions(new TransactionOptions("keyTest","",0,10), Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -117,7 +120,7 @@ public class TransactionServiceTest
            .findTransactionsByAccountIdLikeMerchantName(Mockito.anyInt(), Mockito.any(), Mockito.any());
 
     List<TransactionTransfer> actualTransactions = transactionService
-        .fetchTransactions(Optional.of("KeyTest"), Optional.of(0), Optional.of(limit), Optional.of(1));
+        .fetchTransactions(new TransactionOptions("keyTest","",0,limit), Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -138,7 +141,7 @@ public class TransactionServiceTest
            .findTransactionsByAccountIdLikeMerchantName(Mockito.anyInt(), Mockito.any(), Mockito.any());
 
     List<TransactionTransfer> actualTransactions = transactionService
-        .fetchTransactions(Optional.of("KeyTest"), Optional.of(page), Optional.of(limit), Optional.of(1));
+        .fetchTransactions(new TransactionOptions("keyTest","",page,limit), Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -180,7 +183,7 @@ public class TransactionServiceTest
   {
     Exception exception = assertThrows(NoTransactionFoundException.class, () ->
         transactionService
-            .fetchTransactions(Optional.of("TestKeyword"), Optional.of(0), Optional.of(10), Optional.of(-1))
+            .fetchTransactions(new TransactionOptions("keyTest","",0,10), Optional.of(-1))
     );
 
     String expectedMessage = "No Transaction Found";
