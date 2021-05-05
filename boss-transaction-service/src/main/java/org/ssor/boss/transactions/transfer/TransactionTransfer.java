@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class TransactionTransfer
 {
   @NonNull
@@ -18,7 +18,7 @@ public class TransactionTransfer
   private String merchant;
   private LocalDateTime date;
   private String type;
-  private boolean pending;
+  private Boolean pending;
 
   public TransactionTransfer(Transaction transaction)
   {
