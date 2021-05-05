@@ -12,6 +12,7 @@ import org.ssor.boss.transactions.transfer.TransactionTransfer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService
@@ -33,27 +34,16 @@ public class TransactionService
   public List<TransactionTransfer> fetchTransactions(TransactionOptions options, Optional<Integer> accountId)
       throws NoTransactionFoundException
   {
-    final List<TransactionTransfer> transactions = new ArrayList<>();
-    List<Transaction> rawTransactions;
     Pageable pageable = PageRequest.of(options.getOffset(), options.getLimit());
+    List<Transaction> transactions = transactionRepository.findTransactionsByAccountIdWithOptions(
+        accountId.orElseThrow(NoTransactionFoundException::new), options.getKeyword(), options.getFilter(), pageable
+    );
 
-    if (options.getKeyword().isEmpty())
-    {
-       rawTransactions = transactionRepository
-          .findTransactionsByAccountId(accountId.orElseThrow(NoTransactionFoundException::new), pageable);
-    }
-    else
-    {
-      rawTransactions = transactionRepository
-          .findTransactionsByAccountIdLikeMerchantName(accountId.orElseThrow(NoTransactionFoundException::new),
-                                                       options.getKeyword(), pageable);
-    }
+    List<TransactionTransfer> transactionTransfers = transactions.stream().map(TransactionTransfer::new).collect(Collectors.toList());
 
-    rawTransactions.forEach(raw -> transactions.add(new TransactionTransfer(raw)));
-
-    if (transactions.isEmpty())
+    if (transactionTransfers.isEmpty())
       throw new NoTransactionFoundException();
 
-    return transactions;
+    return transactionTransfers;
   }
 }

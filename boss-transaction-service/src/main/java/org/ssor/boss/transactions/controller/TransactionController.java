@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.ssor.boss.core.entity.TransactionType;
 import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.service.TransactionOptions;
 import org.ssor.boss.transactions.service.TransactionService;
@@ -28,15 +29,16 @@ public class TransactionController
   @GetMapping(value = "")
   public List<TransactionTransfer> getTransactions(
       @PathParam("keyword") Optional<String> keyword,
-      @PathParam("filter") Optional<String> filter,
+      @PathParam("filter") Optional<Integer> filter,
       @PathParam("offset") Optional<Integer> offset,
       @PathParam("limit") Optional<Integer> limit,
       @PathVariable Optional<Integer> accountId) throws
-      NoTransactionFoundException
+      NoTransactionFoundException, ArrayIndexOutOfBoundsException
   {
+    TransactionType typeFilter = TransactionType.values()[filter.orElse(0)];
     TransactionOptions options = new TransactionOptions(
         keyword.orElse(""),
-        filter.orElse(""),
+        typeFilter,
         offset.orElse(0),
         limit
             .map(optLimitNotZero -> optLimitNotZero < 1? 1 : optLimitNotZero)
