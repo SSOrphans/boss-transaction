@@ -2,6 +2,7 @@ package org.ssor.boss.transactions.transfer;
 
 import lombok.*;
 import org.ssor.boss.core.entity.Transaction;
+import org.ssor.boss.core.entity.TransactionType;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,7 @@ public class TransactionTransfer
   private Float balance;
   private String merchant;
   private LocalDateTime date;
+  private String type;
   private boolean pending;
 
   public TransactionTransfer(Transaction transaction)
@@ -32,6 +34,7 @@ public class TransactionTransfer
     this.merchant = transaction.getMerchantName();
     this.date = transaction.getDate();
     this.pending = transaction.getPending();
+    this.type = transaction.getType().toString();
   }
 
 }

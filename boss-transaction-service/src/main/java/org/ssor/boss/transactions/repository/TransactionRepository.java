@@ -14,9 +14,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
   @Query(value = "SELECT t FROM Transaction t WHERE t.accountId = :accountId AND t.id = :id")
   Transaction findTransactionById(Integer id, Integer accountId);
 
-  @Query(value = "SELECT t FROM Transaction t WHERE t.accountId = :accountId")
+  @Query(value = "SELECT t FROM Transaction t WHERE t.accountId = :accountId ORDER BY t.date DESC ")
   List<Transaction> findTransactionsByAccountId(Integer accountId, Pageable pageable);
 
-  @Query(value = "SELECT t FROM Transaction t WHERE  t.accountId = :accountId AND lower(t.merchantName) like lower(concat('%',:keyword,'%'))")
+  @Query(value = "SELECT t FROM Transaction t WHERE  t.accountId = :accountId AND lower(t.merchantName) like lower(concat('%',:keyword,'%')) ORDER BY t.date DESC ")
   List<Transaction> findTransactionsByAccountIdLikeMerchantName(Integer accountId, String keyword, Pageable pageable);
 }

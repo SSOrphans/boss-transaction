@@ -25,7 +25,12 @@ public class TransactionController
   TransactionService transactionService;
 
   @GetMapping(value = "")
-  public List<TransactionTransfer> getTransactions(@PathParam("keyword") Optional<String> keyword, @PathParam("page") Optional<Integer> offset, @PathParam("limit") Optional<Integer> limit, @PathVariable Optional<Integer> accountId) throws
+  public List<TransactionTransfer> getTransactions(
+      @PathParam("keyword") Optional<String> keyword,
+      @PathParam("filter") Optional<String> filter,
+      @PathParam("offset") Optional<Integer> offset,
+      @PathParam("limit") Optional<Integer> limit,
+      @PathVariable Optional<Integer> accountId) throws
       NoTransactionFoundException
   {
     List<TransactionTransfer> unsortedTransactions = transactionService.fetchTransactions(keyword, offset, limit, accountId);
