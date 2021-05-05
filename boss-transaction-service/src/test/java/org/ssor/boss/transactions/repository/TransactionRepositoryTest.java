@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.ssor.boss.core.entity.TransactionType;
-import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.BossControllerApplicationTests;
 import org.ssor.boss.core.entity.Transaction;
 
@@ -72,18 +71,18 @@ class TransactionRepositoryTest
   @Test
   void test_canFindTransaction()
   {
-    assertNotNull(transactionRepository.findTransactionById(1, 1));
+    assertNotNull(transactionRepository.findTransactionById(1, 2));
   }
 
   @Test
-  void test_fetchTransactionsWithFilter() throws NoTransactionFoundException
+  void test_fetchTransactionsWithFilter()
   {
     List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_DEPOSIT, PageRequest.of(0, 10));
     assertFalse(actual.isEmpty());
   }
 
   @Test
-  void test_fetchTransactionsWithWrongFilter() throws NoTransactionFoundException
+  void test_fetchTransactionsWithWrongFilter()
   {
     List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_CHECK, PageRequest.of(0, 10));
     assertTrue(actual.isEmpty());
