@@ -3,7 +3,6 @@ package org.ssor.boss.transactions.transfer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.ssor.boss.core.entity.Transaction;
 
 import java.time.LocalDateTime;
 

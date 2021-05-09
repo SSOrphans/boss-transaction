@@ -38,11 +38,12 @@ public class TransactionController
     TransactionOptions options = new TransactionOptions(
         keyword.orElse(""),
         sortBy.orElse("date"),
-        typeFilter,
-        offset.orElse(0),
+        typeFilter.toString(),
+        offset.orElse(0).toString(),
         limit
             .map(optLimitNotZero -> optLimitNotZero < 1? 1 : optLimitNotZero)
-            .orElse(5));
+            .orElse(5).toString(),
+        "false");
     return transactionService.fetchTransactions(options, accountId);
   }
 

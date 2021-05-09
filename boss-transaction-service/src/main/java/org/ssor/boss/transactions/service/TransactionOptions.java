@@ -3,13 +3,13 @@ package org.ssor.boss.transactions.service;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Sort;
 import org.ssor.boss.core.entity.TransactionType;
 
 import java.util.Optional;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class TransactionOptions
 {
   private String keyword;
@@ -17,7 +17,7 @@ public class TransactionOptions
   private TransactionType filter;
   private Integer offset;
   private Integer limit;
-  private Boolean sortDirection;
+  private Sort.Direction sortDirection;
 
   public TransactionOptions(String... options)
   {
@@ -29,6 +29,7 @@ public class TransactionOptions
                   : TransactionType.TRANSACTION_INVALID;
     this.offset = length > 3 ? Integer.parseInt(Optional.ofNullable(options[3]).orElse("0")) : 0;
     this.limit = length > 4 ? Integer.parseInt(Optional.ofNullable(options[4]).orElse("10")) : 10;
-    this.sortDirection = length > 5 && Boolean.parseBoolean(Optional.ofNullable(options[5]).orElse("false"));
+    boolean directionToggle = length > 5 && Boolean.parseBoolean(Optional.ofNullable(options[5]).orElse("false"));
+    this.sortDirection = directionToggle? Sort.Direction.DESC: Sort.Direction.ASC;
   }
 }

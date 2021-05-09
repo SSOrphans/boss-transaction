@@ -87,7 +87,7 @@ public class TransactionServiceTest
            .findTransactionsByAccountIdWithOptions(Mockito.anyInt(), Mockito.any(), Mockito.any(), Mockito.any());
 
     TransactionListTransfer actualTransactions = transactionService
-        .fetchTransactions(new TransactionOptions("", "date", TransactionType.TRANSACTION_INVALID, 0, 10),
+        .fetchTransactions(new TransactionOptions("", "date", TransactionType.TRANSACTION_INVALID.toString(), "0", "10", "false"),
                            Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
@@ -106,7 +106,7 @@ public class TransactionServiceTest
                                                    Mockito.any(), Mockito.any());
 
     TransactionListTransfer actualTransactions = transactionService
-        .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID, 0, 10),
+        .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID.toString(), "0", "10", "false"),
                            Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
@@ -119,7 +119,7 @@ public class TransactionServiceTest
   @Test
   void test_canLimitTransactions() throws NoTransactionFoundException
   {
-    int limit = 1;
+    Integer limit = 1;
     Page<Transaction> limitedTransactions = new PageImpl<>(stubbedTransactions.toList().subList(0, limit));
 
     Mockito.doReturn(limitedTransactions)
@@ -128,7 +128,7 @@ public class TransactionServiceTest
                                                    Mockito.any(TransactionType.class), Mockito.any());
 
     TransactionListTransfer actualTransactions = transactionService
-        .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID, 0, limit),
+        .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID.toString(), "0", limit.toString(), "false"),
                            Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
@@ -141,8 +141,8 @@ public class TransactionServiceTest
   @Test
   void test_canPageTransactions() throws NoTransactionFoundException
   {
-    int limit = 1;
-    int page = 1;
+    Integer limit = 1;
+    Integer page = 1;
     Page<Transaction> pagedTransaction = new PageImpl<>(stubbedTransactions.toList().subList(1, 2));
 
     Mockito.doReturn(pagedTransaction)
@@ -151,7 +151,7 @@ public class TransactionServiceTest
                                                    Mockito.any(TransactionType.class), Mockito.any());
 
     TransactionListTransfer actualTransactions = transactionService
-        .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID, page, limit),
+        .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID.toString(), page.toString(), limit.toString(), "false"),
                            Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
@@ -194,7 +194,7 @@ public class TransactionServiceTest
   {
     Exception exception = assertThrows(NoTransactionFoundException.class, () ->
         transactionService
-            .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID, 0, 10),
+            .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID.toString(), "0", "10", "false"),
                                Optional.of(-1))
     );
 
