@@ -10,16 +10,14 @@ import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.core.entity.TransactionType;
 import org.ssor.boss.transactions.service.TransactionOptions;
 import org.ssor.boss.transactions.service.TransactionService;
+import org.ssor.boss.transactions.transfer.TransactionListTransfer;
 import org.ssor.boss.transactions.transfer.TransactionTransfer;
 
 import javax.websocket.server.PathParam;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = { "api/accounts/{accountId}/transactions" },
+@RequestMapping(value = { "api/v1/accounts/{accountId}/transactions" },
                 produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 public class TransactionController
 {
@@ -27,7 +25,7 @@ public class TransactionController
   TransactionService transactionService;
 
   @GetMapping(value = "")
-  public List<TransactionTransfer> getTransactions(
+  public TransactionListTransfer getTransactions(
       @PathParam("keyword") Optional<String> keyword,
       @PathParam("filter") Optional<Integer> filter,
       @PathParam("offset") Optional<Integer> offset,

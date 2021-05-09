@@ -17,6 +17,7 @@ public class TransactionOptions
   private TransactionType filter;
   private Integer offset;
   private Integer limit;
+  private Boolean sortDirection;
 
   public TransactionOptions(String... options)
   {
@@ -28,5 +29,6 @@ public class TransactionOptions
                   : TransactionType.TRANSACTION_INVALID;
     this.offset = length > 3 ? Integer.parseInt(Optional.ofNullable(options[3]).orElse("0")) : 0;
     this.limit = length > 4 ? Integer.parseInt(Optional.ofNullable(options[4]).orElse("10")) : 10;
+    this.sortDirection = length > 5 && Boolean.parseBoolean(Optional.ofNullable(options[5]).orElse("false"));
   }
 }

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -77,42 +78,42 @@ class TransactionRepositoryTest
   @Test
   void test_fetchTransactionsWithFilter()
   {
-    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_DEPOSIT, PageRequest.of(0, 10));
+    Page<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_DEPOSIT, PageRequest.of(0, 10));
     assertFalse(actual.isEmpty());
   }
 
   @Test
   void test_fetchTransactionsWithWrongFilter()
   {
-    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_CHECK, PageRequest.of(0, 10));
+    Page<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_CHECK, PageRequest.of(0, 10));
     assertTrue(actual.isEmpty());
   }
 
   @Test
   void test_fetchTransactionsWithoutFilter()
   {
-    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
+    Page<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
     assertFalse(actual.isEmpty());
   }
 
   @Test
   void test_fetchTransactionsWithKeyword()
   {
-    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "te", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
+    Page<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "te", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
     assertFalse(actual.isEmpty());
   }
 
   @Test
   void test_fetchTransactionsWithWrongKeyword()
   {
-    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "tu", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
+    Page<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "tu", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
     assertTrue(actual.isEmpty());
   }
 
   @Test
   void test_fetchTransactionsWithoutKeyword()
   {
-    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
+    Page<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
     assertFalse(actual.isEmpty());
   }
 
@@ -120,7 +121,7 @@ class TransactionRepositoryTest
   void test_canFindTransactionsByAccountId()
   {
     transactionRepository.save(stubbedTransactionA);
-    List<Transaction> transactions = transactionRepository
+    Page<Transaction> transactions = transactionRepository
         .findTransactionsByAccountIdWithOptions(stubbedTransactionA.getAccountId(), "", TransactionType.TRANSACTION_INVALID,
                                      PageRequest.of(0, 5));
     assertFalse(transactions.isEmpty());
@@ -130,7 +131,7 @@ class TransactionRepositoryTest
   void test_canSearchTransactions()
   {
     transactionRepository.save(stubbedTransactionA);
-    List<Transaction> transactions = transactionRepository
+    Page<Transaction> transactions = transactionRepository
         .findTransactionsByAccountIdWithOptions(stubbedTransactionA.getAccountId(), "test", stubbedTransactionA.getType(),
                                                 PageRequest.of(0, 5));
     assertFalse(transactions.isEmpty());
