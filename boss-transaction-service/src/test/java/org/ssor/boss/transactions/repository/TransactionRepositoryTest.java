@@ -3,20 +3,18 @@ package org.ssor.boss.transactions.repository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.ssor.boss.core.entity.TransactionType;
 import org.ssor.boss.transactions.BossControllerApplicationTests;
 import org.ssor.boss.core.entity.Transaction;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ContextConfiguration(classes = { BossControllerApplicationTests.class })
@@ -46,6 +44,7 @@ class TransactionRepositoryTest
     stubbedTransactionA.setPending(false);
     stubbedTransactionA.setSucceeded(true);
     stubbedTransactionA.setOverdraftId(null);
+    stubbedTransactionA.setType(TransactionType.TRANSACTION_DEPOSIT);
 
     stubbedTransactionB = new Transaction();
     stubbedTransactionB.setId(2);
@@ -58,14 +57,8 @@ class TransactionRepositoryTest
     stubbedTransactionB.setPending(true);
     stubbedTransactionB.setSucceeded(true);
     stubbedTransactionB.setOverdraftId(null);
+    stubbedTransactionB.setType(TransactionType.TRANSACTION_PAYMENT);
 
-  }
-
-  @Test
-  void test_canFindTransaction()
-  {
-    assertNotNull(transactionRepository.findTransactionById(1, 1));
-    assertNotNull(transactionRepository);
   }
 
   @Test
@@ -76,11 +69,59 @@ class TransactionRepositoryTest
   }
 
   @Test
+  void test_canFindTransaction()
+  {
+    assertNotNull(transactionRepository.findTransactionById(1, 2));
+  }
+
+  @Test
+  void test_fetchTransactionsWithFilter()
+  {
+    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_DEPOSIT, PageRequest.of(0, 10));
+    assertFalse(actual.isEmpty());
+  }
+
+  @Test
+  void test_fetchTransactionsWithWrongFilter()
+  {
+    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_CHECK, PageRequest.of(0, 10));
+    assertTrue(actual.isEmpty());
+  }
+
+  @Test
+  void test_fetchTransactionsWithoutFilter()
+  {
+    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
+    assertFalse(actual.isEmpty());
+  }
+
+  @Test
+  void test_fetchTransactionsWithKeyword()
+  {
+    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "te", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
+    assertFalse(actual.isEmpty());
+  }
+
+  @Test
+  void test_fetchTransactionsWithWrongKeyword()
+  {
+    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "tu", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
+    assertTrue(actual.isEmpty());
+  }
+
+  @Test
+  void test_fetchTransactionsWithoutKeyword()
+  {
+    List<Transaction> actual = transactionRepository.findTransactionsByAccountIdWithOptions(1, "", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
+    assertFalse(actual.isEmpty());
+  }
+
+  @Test
   void test_canFindTransactionsByAccountId()
   {
     transactionRepository.save(stubbedTransactionA);
     List<Transaction> transactions = transactionRepository
-        .findTransactionsByAccountId(stubbedTransactionA.getAccountId(),
+        .findTransactionsByAccountIdWithOptions(stubbedTransactionA.getAccountId(), "", TransactionType.TRANSACTION_INVALID,
                                      PageRequest.of(0, 5));
     assertFalse(transactions.isEmpty());
   }
@@ -90,8 +131,8 @@ class TransactionRepositoryTest
   {
     transactionRepository.save(stubbedTransactionA);
     List<Transaction> transactions = transactionRepository
-        .findTransactionsByAccountIdLikeMerchantName(stubbedTransactionA.getAccountId(), "test",
-                                     PageRequest.of(0, 5));
+        .findTransactionsByAccountIdWithOptions(stubbedTransactionA.getAccountId(), "test", stubbedTransactionA.getType(),
+                                                PageRequest.of(0, 5));
     assertFalse(transactions.isEmpty());
   }
 }

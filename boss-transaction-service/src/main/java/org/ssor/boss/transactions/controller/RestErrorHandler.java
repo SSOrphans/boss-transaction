@@ -31,6 +31,15 @@ public class RestErrorHandler
     return new ErrorMessage(HttpStatus.NOT_FOUND, NoTransactionFoundException.MESSAGE);
   }
 
+  @ExceptionHandler(ArrayIndexOutOfBoundsException.class)
+  @RequestMapping(produces = {
+      MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+  @ResponseStatus(code = HttpStatus.NOT_FOUND)
+  public ErrorMessage processCatchIndexOutOfBounds()
+  {
+    return new ErrorMessage(HttpStatus.NOT_FOUND, "You have tried to access information that does not exist.");
+  }
+
   @ExceptionHandler(Exception.class)
   @RequestMapping(produces = {
       MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })

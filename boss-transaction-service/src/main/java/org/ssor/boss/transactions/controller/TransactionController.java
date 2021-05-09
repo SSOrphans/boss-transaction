@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.ssor.boss.core.exception.NoTransactionFoundException;
+import org.ssor.boss.core.entity.TransactionType;
+import org.ssor.boss.transactions.service.TransactionOptions;
 import org.ssor.boss.transactions.service.TransactionService;
 import org.ssor.boss.transactions.transfer.TransactionTransfer;
 
@@ -25,10 +27,23 @@ public class TransactionController
   TransactionService transactionService;
 
   @GetMapping(value = "")
-  public List<TransactionTransfer> getTransactions(@PathParam("keyword") Optional<String> keyword, @PathParam("page") Optional<Integer> offset, @PathParam("limit") Optional<Integer> limit, @PathVariable Optional<Integer> accountId) throws
-      NoTransactionFoundException
+  public List<TransactionTransfer> getTransactions(
+      @PathParam("keyword") Optional<String> keyword,
+      @PathParam("filter") Optional<Integer> filter,
+      @PathParam("offset") Optional<Integer> offset,
+      @PathParam("limit") Optional<Integer> limit,
+      @PathVariable Optional<Integer> accountId) throws
+      NoTransactionFoundException, ArrayIndexOutOfBoundsException
   {
-    List<TransactionTransfer> unsortedTransactions = transactionService.fetchTransactions(keyword, offset, limit, accountId);
+    TransactionType typeFilter = TransactionType.values()[filter.orElse(0)];
+    TransactionOptions options = new TransactionOptions(
+        keyword.orElse(""),
+        typeFilter,
+        offset.orElse(0),
+        limit
+            .map(optLimitNotZero -> optLimitNotZero < 1? 1 : optLimitNotZero)
+            .orElse(5));
+    List<TransactionTransfer> unsortedTransactions = transactionService.fetchTransactions(options, accountId);
     return unsortedTransactions.stream().sorted(Comparator.comparing(TransactionTransfer::getDate).reversed()).collect(Collectors.toList());
   }
 

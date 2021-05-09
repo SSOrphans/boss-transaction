@@ -9,8 +9,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.ssor.boss.core.entity.Transaction;
+import org.ssor.boss.core.entity.TransactionType;
 import org.ssor.boss.core.exception.NoTransactionFoundException;
+import org.ssor.boss.transactions.service.TransactionOptions;
 import org.ssor.boss.transactions.service.TransactionService;
+import org.ssor.boss.transactions.transfer.TransactionTransfer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,6 +49,7 @@ class TransactionControllerTest
     transactionA.setId(1);
     transactionA.setMerchantName("Stubbed Merchant");
     transactionA.setNewBalance(12345.67f);
+    transactionA.setType(TransactionType.TRANSACTION_DEPOSIT);
 
     Transaction transactionB = new Transaction();
 
@@ -58,6 +62,7 @@ class TransactionControllerTest
     transactionB.setId(1);
     transactionB.setMerchantName("Stubbed Merchant");
     transactionB.setNewBalance(12345.67f);
+    transactionB.setType(TransactionType.TRANSACTION_PAYMENT);
 
     stubbedTransaction = transactionA;
     stubbedTransactions = new ArrayList<>();
@@ -69,21 +74,21 @@ class TransactionControllerTest
   {
     Mockito.doReturn(stubbedTransactions)
            .when(transactionService)
-           .fetchTransactions(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+           .fetchTransactions(Mockito.any(TransactionOptions.class), Mockito.any());
 
     assertEquals(stubbedTransactions,
                  transactionController
-                     .getTransactions(Optional.ofNullable(null), null, null, Optional.of(1)));
+                     .getTransactions(Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.of(1)));
   }
 
   @Test
   void test_canGetTransaction() throws NoTransactionFoundException
   {
-    Mockito.doReturn(stubbedTransaction)
+    Mockito.doReturn(new TransactionTransfer(stubbedTransaction))
            .when(transactionService)
            .fetchAccountTransactionById(Mockito.any(), Mockito.any());
 
-    assertEquals(stubbedTransaction,
+    assertEquals(new TransactionTransfer(stubbedTransaction),
                  transactionController
                      .getTransaction(Optional.of(1), Optional.of(1)));
   }
@@ -92,9 +97,9 @@ class TransactionControllerTest
   void test_willThrowExceptionOnBadRouteGetTransactions() throws NoTransactionFoundException
   {
     NoTransactionFoundException ntfe = new NoTransactionFoundException();
-    Mockito.doThrow(ntfe).when(transactionService).fetchTransactions(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+    Mockito.doThrow(ntfe).when(transactionService).fetchTransactions(Mockito.any(TransactionOptions.class), Mockito.any());
     Exception exception = assertThrows(NoTransactionFoundException.class, () ->
-        transactionController.getTransactions(Optional.ofNullable(null), null, null, Optional.of(1))
+        transactionController.getTransactions(Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.of(1))
     );
 
     String expectedMessage = "No Transaction Found";

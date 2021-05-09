@@ -8,14 +8,16 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-    <groupId>org.ssor</groupId>
+
     <artifactId>boss-transaction-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>boss-controller</name>
-    <description>Demo project for Spring Boot</description>
+    <name>boss-transaction</name>
+    <description>Bank of Smoothstack Account MicroService</description>
+
     <properties>
         <java.version>11</java.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

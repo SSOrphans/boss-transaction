@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class TransactionTransfer
 {
   @NonNull
@@ -17,7 +17,8 @@ public class TransactionTransfer
   private Float balance;
   private String merchant;
   private LocalDateTime date;
-  private boolean pending;
+  private String type;
+  private Boolean pending;
 
   public TransactionTransfer(Transaction transaction)
   {
@@ -32,6 +33,7 @@ public class TransactionTransfer
     this.merchant = transaction.getMerchantName();
     this.date = transaction.getDate();
     this.pending = transaction.getPending();
+    this.type = transaction.getType().toString();
   }
 
 }

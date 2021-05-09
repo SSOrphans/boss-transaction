@@ -45,6 +45,14 @@ class RestErrorHandlerTest
   }
 
   @Test
+  void test_canReturnIndexOutOfBoundsException()
+  {
+    ErrorMessage response = restErrorHandler.processCatchIndexOutOfBounds();
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
+    assertEquals("You have tried to access information that does not exist.", response.getMessage());
+  }
+
+  @Test
   void test_canReturnGenericException()
   {
     ErrorMessage response = restErrorHandler.processCatchUnhandledException();
