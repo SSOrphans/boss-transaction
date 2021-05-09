@@ -37,7 +37,7 @@ public class TransactionService
   public TransactionListTransfer fetchTransactions(TransactionOptions options, Optional<Integer> accountId)
       throws NoTransactionFoundException
   {
-    Pageable pageable = PageRequest.of(options.getOffset(), options.getLimit(), Sort.by(Sort.Direction.DESC, options.getSortBy(), "date"));
+    Pageable pageable = PageRequest.of(options.getOffset(), options.getLimit(), Sort.by(options.getSortDirection(), options.getSortBy(), "date"));
     Optional<Page<Transaction>> optionalTransactions = Optional.ofNullable(transactionRepository.findTransactionsByAccountIdWithOptions(
         accountId.orElseThrow(NoTransactionFoundException::new), options.getKeyword(), options.getFilter(), pageable
     ));

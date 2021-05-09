@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = { "api/v1/accounts/{accountId}/transactions" },
-                produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+                produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 public class TransactionController
 {
   @Autowired
@@ -31,6 +31,7 @@ public class TransactionController
       @PathParam("offset") Optional<Integer> offset,
       @PathParam("limit") Optional<Integer> limit,
       @PathParam("sortBy") Optional<String> sortBy,
+      @PathParam("sortDirection") Optional<String> sortDirection,
       @PathVariable Optional<Integer> accountId) throws
       NoTransactionFoundException, ArrayIndexOutOfBoundsException
   {
@@ -41,14 +42,15 @@ public class TransactionController
         typeFilter.toString(),
         offset.orElse(0).toString(),
         limit
-            .map(optLimitNotZero -> optLimitNotZero < 1? 1 : optLimitNotZero)
+            .map(optLimitNotZero -> optLimitNotZero < 1 ? 1 : optLimitNotZero)
             .orElse(5).toString(),
-        "false");
+        sortDirection.orElse("false"));
     return transactionService.fetchTransactions(options, accountId);
   }
 
   @GetMapping("/{id}")
-  public TransactionTransfer getTransaction(@PathVariable Optional<Integer> id, @PathVariable Optional<Integer> accountId) throws
+  public TransactionTransfer getTransaction(@PathVariable Optional<Integer> id,
+                                            @PathVariable Optional<Integer> accountId) throws
       NoTransactionFoundException
   {
     return transactionService.fetchAccountTransactionById(id, accountId);
