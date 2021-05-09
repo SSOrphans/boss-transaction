@@ -32,19 +32,20 @@ public class TransactionController
       @PathParam("filter") Optional<Integer> filter,
       @PathParam("offset") Optional<Integer> offset,
       @PathParam("limit") Optional<Integer> limit,
+      @PathParam("sortBy") Optional<String> sortBy,
       @PathVariable Optional<Integer> accountId) throws
       NoTransactionFoundException, ArrayIndexOutOfBoundsException
   {
     TransactionType typeFilter = TransactionType.values()[filter.orElse(0)];
     TransactionOptions options = new TransactionOptions(
         keyword.orElse(""),
+        sortBy.orElse("date"),
         typeFilter,
         offset.orElse(0),
         limit
             .map(optLimitNotZero -> optLimitNotZero < 1? 1 : optLimitNotZero)
             .orElse(5));
-    List<TransactionTransfer> unsortedTransactions = transactionService.fetchTransactions(options, accountId);
-    return unsortedTransactions.stream().sorted(Comparator.comparing(TransactionTransfer::getDate).reversed()).collect(Collectors.toList());
+    return transactionService.fetchTransactions(options, accountId);
   }
 
   @GetMapping("/{id}")

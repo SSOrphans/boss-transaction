@@ -3,6 +3,7 @@ package org.ssor.boss.transactions.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.ssor.boss.core.entity.Transaction;
 import org.ssor.boss.core.exception.NoTransactionFoundException;
@@ -34,7 +35,7 @@ public class TransactionService
   public List<TransactionTransfer> fetchTransactions(TransactionOptions options, Optional<Integer> accountId)
       throws NoTransactionFoundException
   {
-    Pageable pageable = PageRequest.of(options.getOffset(), options.getLimit());
+    Pageable pageable = PageRequest.of(options.getOffset(), options.getLimit(), Sort.by(Sort.Direction.DESC, options.getSortBy()));
     List<Transaction> transactions = transactionRepository.findTransactionsByAccountIdWithOptions(
         accountId.orElseThrow(NoTransactionFoundException::new), options.getKeyword(), options.getFilter(), pageable
     );

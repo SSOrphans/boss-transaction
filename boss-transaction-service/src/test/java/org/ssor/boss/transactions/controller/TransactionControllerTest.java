@@ -78,7 +78,7 @@ class TransactionControllerTest
 
     assertEquals(stubbedTransactions,
                  transactionController
-                     .getTransactions(Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.of(1)));
+                     .getTransactions(Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.of(1)));
   }
 
   @Test
@@ -99,7 +99,7 @@ class TransactionControllerTest
     NoTransactionFoundException ntfe = new NoTransactionFoundException();
     Mockito.doThrow(ntfe).when(transactionService).fetchTransactions(Mockito.any(TransactionOptions.class), Mockito.any());
     Exception exception = assertThrows(NoTransactionFoundException.class, () ->
-        transactionController.getTransactions(Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.of(1))
+        transactionController.getTransactions(Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.of(1))
     );
 
     String expectedMessage = "No Transaction Found";

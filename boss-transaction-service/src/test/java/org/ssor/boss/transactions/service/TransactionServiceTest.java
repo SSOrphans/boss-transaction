@@ -84,7 +84,8 @@ public class TransactionServiceTest
            .findTransactionsByAccountIdWithOptions(Mockito.anyInt(), Mockito.any(), Mockito.any(), Mockito.any());
 
     List<TransactionTransfer> actualTransactions = transactionService
-        .fetchTransactions(new TransactionOptions("", TransactionType.TRANSACTION_INVALID, 0, 10), Optional.of(1));
+        .fetchTransactions(new TransactionOptions("", "date", TransactionType.TRANSACTION_INVALID, 0, 10),
+                           Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -102,7 +103,8 @@ public class TransactionServiceTest
                                                    Mockito.any(), Mockito.any());
 
     List<TransactionTransfer> actualTransactions = transactionService
-        .fetchTransactions(new TransactionOptions("keyTest", TransactionType.TRANSACTION_INVALID, 0, 10), Optional.of(1));
+        .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID, 0, 10),
+                           Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -123,7 +125,8 @@ public class TransactionServiceTest
                                                    Mockito.any(TransactionType.class), Mockito.any());
 
     List<TransactionTransfer> actualTransactions = transactionService
-        .fetchTransactions(new TransactionOptions("keyTest", TransactionType.TRANSACTION_INVALID, 0, limit), Optional.of(1));
+        .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID, 0, limit),
+                           Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -145,7 +148,8 @@ public class TransactionServiceTest
                                                    Mockito.any(TransactionType.class), Mockito.any());
 
     List<TransactionTransfer> actualTransactions = transactionService
-        .fetchTransactions(new TransactionOptions("keyTest", TransactionType.TRANSACTION_INVALID, page, limit), Optional.of(1));
+        .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID, page, limit),
+                           Optional.of(1));
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -187,13 +191,36 @@ public class TransactionServiceTest
   {
     Exception exception = assertThrows(NoTransactionFoundException.class, () ->
         transactionService
-            .fetchTransactions(new TransactionOptions("keyTest", TransactionType.TRANSACTION_INVALID, 0, 10), Optional.of(-1))
+            .fetchTransactions(new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID, 0, 10),
+                               Optional.of(-1))
     );
 
     String expectedMessage = "No Transaction Found";
     String actualMessage = exception.getMessage();
 
     assertEquals(expectedMessage, actualMessage);
+  }
+
+  @Test
+  void test_willAcceptNullTransactionOptionArgs()
+  {
+    TransactionOptions options = new TransactionOptions();
+    assertEquals("",options.getKeyword());
+    assertEquals("date",options.getSortBy());
+    assertEquals(TransactionType.TRANSACTION_INVALID, options.getFilter());
+    assertEquals(0,options.getOffset());
+    assertEquals(10,options.getLimit());
+  }
+
+  @Test
+  void test_willAcceptTransactionOptionArgs()
+  {
+    TransactionOptions options = new TransactionOptions("test", null, TransactionType.TRANSACTION_ATM.name(), "2", "5");
+    assertEquals("test",options.getKeyword());
+    assertEquals("date",options.getSortBy());
+    assertEquals(TransactionType.TRANSACTION_ATM, options.getFilter());
+    assertEquals(2,options.getOffset());
+    assertEquals(5,options.getLimit());
   }
 
 }
