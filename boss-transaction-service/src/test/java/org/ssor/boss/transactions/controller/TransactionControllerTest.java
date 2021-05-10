@@ -13,12 +13,14 @@ import org.ssor.boss.core.entity.TransactionType;
 import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.service.TransactionOptions;
 import org.ssor.boss.transactions.service.TransactionService;
+import org.ssor.boss.transactions.transfer.TransactionListTransfer;
 import org.ssor.boss.transactions.transfer.TransactionTransfer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -72,13 +74,25 @@ class TransactionControllerTest
   @Test
   void test_canGetTransactionsWithoutKeyword() throws NoTransactionFoundException
   {
-    Mockito.doReturn(stubbedTransactions)
+    List<TransactionTransfer> transactionTransfers =
+        stubbedTransactions.stream().map(TransactionTransfer::new).collect(Collectors.toList());
+    TransactionListTransfer transfer = new TransactionListTransfer(transactionTransfers,1,1,1);
+    Mockito.doReturn(transfer)
            .when(transactionService)
            .fetchTransactions(Mockito.any(TransactionOptions.class), Mockito.any());
 
-    assertEquals(stubbedTransactions,
+    assertEquals(transfer,
                  transactionController
-                     .getTransactions(Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.of(1)));
+                     .getTransactions(
+                         Optional.ofNullable(null),
+                         Optional.ofNullable(null),
+                         Optional.ofNullable(null),
+                         Optional.ofNullable(null),
+                         Optional.ofNullable(null),
+                         Optional.ofNullable(null),
+                         Optional.of(1)
+                     )
+    );
   }
 
   @Test
@@ -99,7 +113,15 @@ class TransactionControllerTest
     NoTransactionFoundException ntfe = new NoTransactionFoundException();
     Mockito.doThrow(ntfe).when(transactionService).fetchTransactions(Mockito.any(TransactionOptions.class), Mockito.any());
     Exception exception = assertThrows(NoTransactionFoundException.class, () ->
-        transactionController.getTransactions(Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.of(1))
+        transactionController.getTransactions(
+            Optional.ofNullable(null),
+            Optional.ofNullable(null),
+            Optional.ofNullable(null),
+            Optional.ofNullable(null),
+            Optional.ofNullable(null),
+            Optional.ofNullable(null),
+            Optional.of(1)
+        )
     );
 
     String expectedMessage = "No Transaction Found";

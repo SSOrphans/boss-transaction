@@ -10,45 +10,47 @@ import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.core.entity.TransactionType;
 import org.ssor.boss.transactions.service.TransactionOptions;
 import org.ssor.boss.transactions.service.TransactionService;
+import org.ssor.boss.transactions.transfer.TransactionListTransfer;
 import org.ssor.boss.transactions.transfer.TransactionTransfer;
 
 import javax.websocket.server.PathParam;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = { "api/accounts/{accountId}/transactions" },
-                produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+@RequestMapping(value = { "api/v1/accounts/{accountId}/transactions" },
+                produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 public class TransactionController
 {
   @Autowired
   TransactionService transactionService;
 
   @GetMapping(value = "")
-  public List<TransactionTransfer> getTransactions(
+  public TransactionListTransfer getTransactions(
       @PathParam("keyword") Optional<String> keyword,
       @PathParam("filter") Optional<Integer> filter,
       @PathParam("offset") Optional<Integer> offset,
       @PathParam("limit") Optional<Integer> limit,
+      @PathParam("sortBy") Optional<String> sortBy,
+      @PathParam("sortDirection") Optional<String> sortDirection,
       @PathVariable Optional<Integer> accountId) throws
       NoTransactionFoundException, ArrayIndexOutOfBoundsException
   {
     TransactionType typeFilter = TransactionType.values()[filter.orElse(0)];
     TransactionOptions options = new TransactionOptions(
         keyword.orElse(""),
-        typeFilter,
-        offset.orElse(0),
+        sortBy.orElse("date"),
+        typeFilter.toString(),
+        offset.orElse(0).toString(),
         limit
-            .map(optLimitNotZero -> optLimitNotZero < 1? 1 : optLimitNotZero)
-            .orElse(5));
-    List<TransactionTransfer> unsortedTransactions = transactionService.fetchTransactions(options, accountId);
-    return unsortedTransactions.stream().sorted(Comparator.comparing(TransactionTransfer::getDate).reversed()).collect(Collectors.toList());
+            .map(optLimitNotZero -> optLimitNotZero < 1 ? 1 : optLimitNotZero)
+            .orElse(5).toString(),
+        sortDirection.orElse("false"));
+    return transactionService.fetchTransactions(options, accountId);
   }
 
   @GetMapping("/{id}")
-  public TransactionTransfer getTransaction(@PathVariable Optional<Integer> id, @PathVariable Optional<Integer> accountId) throws
+  public TransactionTransfer getTransaction(@PathVariable Optional<Integer> id,
+                                            @PathVariable Optional<Integer> accountId) throws
       NoTransactionFoundException
   {
     return transactionService.fetchAccountTransactionById(id, accountId);

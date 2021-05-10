@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS transaction_type (
 
 CREATE TABLE IF NOT EXISTS transaction (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    type_id INT UNSIGNED NOT NULL,
+    type_id TINYINT UNSIGNED NOT NULL,
     account_id INT UNSIGNED NOT NULL,
     overdraft_id INT UNSIGNED NULL,
     atm_transaction_id INT UNSIGNED NULL,
