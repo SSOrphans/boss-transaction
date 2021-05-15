@@ -23,7 +23,7 @@ public class TransactionService
   @Autowired
   TransactionRepository transactionRepository;
 
-  public TransactionTransfer fetchAccountTransactionById(Optional<Integer> id, Optional<Integer> accountId)
+  public TransactionTransfer fetchAccountTransactionById(Optional<Integer> id, Optional<Long> accountId)
       throws NoTransactionFoundException
   {
     Optional<Transaction> transaction =
@@ -34,7 +34,7 @@ public class TransactionService
   }
 
 
-  public TransactionListTransfer fetchTransactions(TransactionOptions options, Optional<Integer> accountId)
+  public TransactionListTransfer fetchTransactions(TransactionOptions options, Optional<Long> accountId)
       throws NoTransactionFoundException
   {
     Pageable pageable = PageRequest.of(options.getOffset(), options.getLimit(), Sort.by(options.getSortDirection(), options.getSortBy(), "date"));

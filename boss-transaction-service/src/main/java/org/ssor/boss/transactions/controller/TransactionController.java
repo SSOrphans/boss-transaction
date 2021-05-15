@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.core.entity.TransactionType;
+import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.service.TransactionOptions;
 import org.ssor.boss.transactions.service.TransactionService;
 import org.ssor.boss.transactions.transfer.TransactionListTransfer;
@@ -32,7 +32,7 @@ public class TransactionController
       @PathParam("limit") Optional<Integer> limit,
       @PathParam("sortBy") Optional<String> sortBy,
       @PathParam("sortDirection") Optional<String> sortDirection,
-      @PathVariable Optional<Integer> accountId) throws
+      @PathVariable Optional<Long> accountId) throws
       NoTransactionFoundException, ArrayIndexOutOfBoundsException
   {
     TransactionType typeFilter = TransactionType.values()[filter.orElse(0)];
@@ -50,7 +50,7 @@ public class TransactionController
 
   @GetMapping("/{id}")
   public TransactionTransfer getTransaction(@PathVariable Optional<Integer> id,
-                                            @PathVariable Optional<Integer> accountId) throws
+                                            @PathVariable Optional<Long> accountId) throws
       NoTransactionFoundException
   {
     return transactionService.fetchAccountTransactionById(id, accountId);
