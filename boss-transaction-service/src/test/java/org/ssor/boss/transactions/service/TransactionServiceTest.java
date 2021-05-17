@@ -38,13 +38,18 @@ public class TransactionServiceTest
   private static Transaction stubbedTransactionA;
   private static Transaction stubbedTransactionB;
   private static Page<Transaction> stubbedTransactions;
+  
+  private static Optional<Long> stubbedAccountId;
+  private static Optional<Long> stubbedBadAccountId;
 
   @BeforeAll
   static void setUp()
   {
+    stubbedAccountId = Optional.of(1L);
+    stubbedBadAccountId = Optional.of(-1L);
     Transaction transactionA = new Transaction();
 
-    transactionA.setAccountId(1);
+    transactionA.setAccountId(1L);
     transactionA.setSucceeded(true);
     transactionA.setAtmTransactionId(1);
     transactionA.setPending(false);
@@ -58,7 +63,7 @@ public class TransactionServiceTest
 
     Transaction transactionB = new Transaction();
 
-    transactionB.setAccountId(1);
+    transactionB.setAccountId(1L);
     transactionB.setSucceeded(true);
     transactionB.setAtmTransactionId(1);
     transactionB.setPending(false);
@@ -84,12 +89,12 @@ public class TransactionServiceTest
   {
     Mockito.doReturn(stubbedTransactions)
            .when(transactionRepository)
-           .findTransactionsByAccountIdWithOptions(Mockito.anyInt(), Mockito.any(), Mockito.any(), Mockito.any());
+           .findTransactionsByAccountIdWithOptions(Mockito.anyLong(), Mockito.any(), Mockito.any(), Mockito.any());
 
     TransactionListTransfer actualTransactions = transactionService
         .fetchTransactions(
             new TransactionOptions("", "date", TransactionType.TRANSACTION_INVALID.toString(), "0", "10", "false"),
-            Optional.of(1));
+            stubbedAccountId);
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -103,14 +108,14 @@ public class TransactionServiceTest
   {
     Mockito.doReturn(stubbedTransactions)
            .when(transactionRepository)
-           .findTransactionsByAccountIdWithOptions(Mockito.anyInt(), Mockito.any(),
+           .findTransactionsByAccountIdWithOptions(Mockito.anyLong(), Mockito.any(),
                                                    Mockito.any(), Mockito.any());
 
     TransactionListTransfer actualTransactions = transactionService
         .fetchTransactions(
             new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID.toString(), "0", "10",
                                    "false"),
-            Optional.of(1));
+            stubbedAccountId);
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -128,13 +133,13 @@ public class TransactionServiceTest
     Mockito.doReturn(limitedTransactions)
            .when(transactionRepository)
            .findTransactionsByAccountIdWithOptions(
-               Mockito.anyInt(), Mockito.any(),
+               Mockito.anyLong(), Mockito.any(),
                Mockito.any(TransactionType.class), Mockito.any());
 
     TransactionListTransfer actualTransactions = transactionService
         .fetchTransactions(
             new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID.toString(), "0",
-                                   Integer.toString(limit), "false"), Optional.of(1));
+                                   Integer.toString(limit), "false"), stubbedAccountId);
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -152,13 +157,13 @@ public class TransactionServiceTest
 
     Mockito.doReturn(pagedTransaction)
            .when(transactionRepository)
-           .findTransactionsByAccountIdWithOptions(Mockito.anyInt(), Mockito.any(),
+           .findTransactionsByAccountIdWithOptions(Mockito.anyLong(), Mockito.any(),
                                                    Mockito.any(TransactionType.class), Mockito.any());
 
     TransactionListTransfer actualTransactions = transactionService
         .fetchTransactions(
             new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID.toString(),
-                                   Integer.toString(page), Integer.toString(limit), "false"), Optional.of(1));
+                                   Integer.toString(page), Integer.toString(limit), "false"), stubbedAccountId);
 
     List<TransactionTransfer> expectedTransactions = new ArrayList<>();
 
@@ -173,10 +178,10 @@ public class TransactionServiceTest
 
     Mockito.doReturn(stubbedTransactionA)
            .when(transactionRepository)
-           .findTransactionById(Mockito.anyInt(), Mockito.anyInt());
+           .findTransactionById(Mockito.anyInt(), Mockito.anyLong());
 
     TransactionTransfer expected = new TransactionTransfer(stubbedTransactionA);
-    TransactionTransfer actual = transactionService.fetchAccountTransactionById(Optional.of(1), Optional.of(1));
+    TransactionTransfer actual = transactionService.fetchAccountTransactionById(Optional.of(1), stubbedAccountId);
 
     assertEquals(expected, actual);
 
@@ -187,10 +192,10 @@ public class TransactionServiceTest
   {
     Page<Transaction> stubbedPagedTransaction = new PageImpl<>(new ArrayList<>());
     Mockito.doReturn(stubbedPagedTransaction).when(transactionRepository).findTransactionsByAccountIdWithOptions(
-        Mockito.anyInt(), Mockito.any(), Mockito.any(), Mockito.any()
+        Mockito.anyLong(), Mockito.any(), Mockito.any(), Mockito.any()
     );
     Exception exception = assertThrows(NoTransactionFoundException.class, () -> {
-      transactionService.fetchTransactions(new TransactionOptions(), Optional.of(-1));
+      transactionService.fetchTransactions(new TransactionOptions(), stubbedBadAccountId);
     });
 
     String expectedMessage = "No Transaction Found";
@@ -203,7 +208,7 @@ public class TransactionServiceTest
   void test_willThrowNoTransactionFoundExceptionOnFetchAccountTransactionById()
   {
     Exception exception = assertThrows(NoTransactionFoundException.class, () ->
-        transactionService.fetchAccountTransactionById(Optional.of(1), Optional.of(-1))
+        transactionService.fetchAccountTransactionById(Optional.of(1), stubbedBadAccountId)
     );
 
     String expectedMessage = "No Transaction Found";
@@ -219,7 +224,7 @@ public class TransactionServiceTest
         transactionService
             .fetchTransactions(
                 new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID.toString(), "0", "10", "false"),
-                Optional.of(-1))
+                stubbedBadAccountId)
     );
 
     String expectedMessage = "No Transaction Found";

@@ -11,8 +11,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <modules>
-        <module>boss-core</module>
         <module>boss-transaction-service</module>
+        <module>boss-core</module>
     </modules>
 
     <groupId>org.ssor.boss</groupId>
@@ -22,6 +22,8 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <start-class>org.ssor.boss.transactions.BossTransactionApplication</start-class>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
 </project>

@@ -28,7 +28,7 @@ public class TransactionOptions
                   : TransactionType.TRANSACTION_INVALID;
     this.offset = length > 3 ? Integer.parseInt(Optional.ofNullable(options[3]).orElse("0")) : 0;
     this.limit = length > 4 ? Integer.parseInt(Optional.ofNullable(options[4]).orElse("10")) : 10;
-    String directionToggle = Optional.ofNullable(options[5]).orElse("DESC");
+    String directionToggle = length > 5 ? Optional.ofNullable(options[5]).orElse("DESC") : "DESC";
     this.sortDirection = directionToggle.equals("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;
   }
 }
