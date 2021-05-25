@@ -12,7 +12,6 @@ import org.ssor.boss.transactions.repository.TransactionRepository;
 import org.ssor.boss.transactions.transfer.TransactionListTransfer;
 import org.ssor.boss.transactions.transfer.TransactionTransfer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode
+@RequiredArgsConstructor
 @NoArgsConstructor
 public class TransactionTransfer
 {
@@ -22,12 +23,12 @@ public class TransactionTransfer
 
   public TransactionTransfer(Transaction transaction)
   {
+    this.id = transaction.getId();
     setEntity(transaction);
   }
 
   public void setEntity(Transaction transaction)
   {
-    this.id = transaction.getId();
     this.amount = transaction.getAmount();
     this.balance = transaction.getNewBalance();
     this.merchant = transaction.getMerchantName();

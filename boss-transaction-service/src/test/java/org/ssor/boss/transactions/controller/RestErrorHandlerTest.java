@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-public
 class RestErrorHandlerTest
 {
   @InjectMocks
@@ -28,12 +27,26 @@ class RestErrorHandlerTest
     assertNotNull(reh);
   }
 
+
+
   @Test
   void test_canReturnResponseEntityBadRouteException()
   {
     ErrorMessage response = restErrorHandler.processRouteError();
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
     assertEquals(BadRouteException.MESSAGE, response.getMessage());
+  }
+
+  @Test
+  void test_canReturnResponseEntityBadRouteExceptionOnMethod(){
+    ErrorMessage responseGet = restErrorHandler.processGetRouteError();
+    ErrorMessage responsePost = restErrorHandler.processPostRouteError();
+    ErrorMessage responseDelete = restErrorHandler.processDeleteRouteError();
+
+    ErrorMessage errorMessage = restErrorHandler.processRouteError();
+    assertEquals(errorMessage, responsePost);
+    assertEquals(errorMessage, responseDelete);
+    assertEquals(errorMessage, responseGet);
   }
 
   @Test
@@ -60,6 +73,15 @@ class RestErrorHandlerTest
     assertEquals("Internal Error: Contact the administrator for help", response.getMessage());
   }
 
+  @Test
+  void test_canReturnGenericExceptionOnMethod(){
+    ErrorMessage responseGet = restErrorHandler.processGetCatchUnhandledException();
+    ErrorMessage responsePost = restErrorHandler.processPostCatchUnhandledException();
+    ErrorMessage responseDelete = restErrorHandler.processDeleteCatchUnhandledException();
 
-
+    ErrorMessage errorMessage = restErrorHandler.processCatchUnhandledException();
+    assertEquals(errorMessage, responsePost);
+    assertEquals(errorMessage, responseDelete);
+    assertEquals(errorMessage, responseGet);
+  }
 }

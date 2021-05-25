@@ -36,7 +36,7 @@ public class TransactionController
       NoTransactionFoundException, ArrayIndexOutOfBoundsException
   {
     TransactionType typeFilter = TransactionType.values()[filter.orElse(0)];
-    TransactionOptions options = new TransactionOptions(
+    var options = new TransactionOptions(
         keyword.orElse(""),
         sortBy.orElse("date"),
         typeFilter.toString(),
