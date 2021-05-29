@@ -129,8 +129,8 @@ Resources:
       Conditions:
         - Field: path-pattern
           Values:
-            - /api/*
-            - /api*
+            - /api/v1/accounts/*
+            - /api/v1/accounts*
       Actions:
         - Type: forward
           TargetGroupArn: !Ref TargetGroup
