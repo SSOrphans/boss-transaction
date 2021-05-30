@@ -5,10 +5,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.ssor.boss.core.exception.BadRouteException;
 import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.transfer.ErrorMessage;
+
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,26 +30,13 @@ class RestErrorHandlerTest
     assertNotNull(reh);
   }
 
-
-
   @Test
   void test_canReturnResponseEntityBadRouteException()
   {
-    ErrorMessage response = restErrorHandler.processRouteError();
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
-    assertEquals(BadRouteException.MESSAGE, response.getMessage());
-  }
+    ResponseEntity<ErrorMessage> response = restErrorHandler.processRouteError();
 
-  @Test
-  void test_canReturnResponseEntityBadRouteExceptionOnMethod(){
-    ErrorMessage responseGet = restErrorHandler.processGetRouteError();
-    ErrorMessage responsePost = restErrorHandler.processPostRouteError();
-    ErrorMessage responseDelete = restErrorHandler.processDeleteRouteError();
-
-    ErrorMessage errorMessage = restErrorHandler.processRouteError();
-    assertEquals(errorMessage, responsePost);
-    assertEquals(errorMessage, responseDelete);
-    assertEquals(errorMessage, responseGet);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    assertEquals(BadRouteException.MESSAGE, Objects.requireNonNull(response.getBody()).getMessage());
   }
 
   @Test
@@ -68,20 +58,10 @@ class RestErrorHandlerTest
   @Test
   void test_canReturnGenericException()
   {
-    ErrorMessage response = restErrorHandler.processCatchUnhandledException();
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatus());
-    assertEquals("Internal Error: Contact the administrator for help", response.getMessage());
+
+    var response = restErrorHandler.processCatchUnhandledException();
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    assertEquals("Internal Error: Contact the administrator for help", Objects.requireNonNull(response.getBody()).getMessage());
   }
 
-  @Test
-  void test_canReturnGenericExceptionOnMethod(){
-    ErrorMessage responseGet = restErrorHandler.processGetCatchUnhandledException();
-    ErrorMessage responsePost = restErrorHandler.processPostCatchUnhandledException();
-    ErrorMessage responseDelete = restErrorHandler.processDeleteCatchUnhandledException();
-
-    ErrorMessage errorMessage = restErrorHandler.processCatchUnhandledException();
-    assertEquals(errorMessage, responsePost);
-    assertEquals(errorMessage, responseDelete);
-    assertEquals(errorMessage, responseGet);
-  }
 }
