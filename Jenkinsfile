@@ -11,14 +11,14 @@ node {
             }
             withEnv(["commitHash=${sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()}"]) {
                 stage('Build') {
-                    withMaven(jdk: 'openjdk-11') {
+                    withMaven(jdk: 'amazoncorretto-11') {
                         echo "Building $serviceName with maven"
                         sh 'mvn clean package'
                     }
                 }
                 stage('Quality Analysis') {
                     withSonarQubeEnv('SonarQube Server') {
-                        withMaven(jdk: 'openjdk-11') {
+                        withMaven(jdk: 'amazoncorretto-11') {
                             echo "Performing Quality Analysis for $serviceName"
                             sh 'mvn sonar:sonar'
                         }

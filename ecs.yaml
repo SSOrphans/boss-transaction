@@ -129,6 +129,7 @@ Resources:
       Conditions:
         - Field: path-pattern
           Values:
+            - /api/v1/transactions/health
             - /api/v1/accounts/*/transactions*
             - /api/v1/accounts/*/transactions/*
       Actions:
