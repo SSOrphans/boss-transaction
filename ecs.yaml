@@ -109,7 +109,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       HealthCheckIntervalSeconds: 60
-      HealthCheckPath: 'api/v1/transactions/health'
+      HealthCheckPath: '/api/v1/transactions/health'
       HealthCheckTimeoutSeconds: 5
       HealthCheckPort: '8080'
       UnhealthyThresholdCount: 2
