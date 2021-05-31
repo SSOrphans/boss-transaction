@@ -11,13 +11,6 @@ import org.ssor.boss.transactions.transfer.ErrorMessage;
 @RestControllerAdvice
 public class RestErrorHandler
 {
-  @ExceptionHandler(BadRouteException.class)
-  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-  public ResponseEntity<ErrorMessage> processRouteError()
-  {
-    var message = new ErrorMessage(HttpStatus.BAD_REQUEST, BadRouteException.MESSAGE);
-    return new ResponseEntity<ErrorMessage>(message, HttpStatus.BAD_REQUEST);
-  }
 
   @ExceptionHandler(NoTransactionFoundException.class)
   @ResponseStatus(value = HttpStatus.NOT_FOUND)

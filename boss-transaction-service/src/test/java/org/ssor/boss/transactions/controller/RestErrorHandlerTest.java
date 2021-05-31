@@ -31,15 +31,6 @@ class RestErrorHandlerTest
   }
 
   @Test
-  void test_canReturnResponseEntityBadRouteException()
-  {
-    ResponseEntity<ErrorMessage> response = restErrorHandler.processRouteError();
-
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    assertEquals(BadRouteException.MESSAGE, Objects.requireNonNull(response.getBody()).getMessage());
-  }
-
-  @Test
   void test_canReturnTransactionNotFoundException()
   {
     ErrorMessage response = restErrorHandler.processNoTransactionFoundOccurred();
