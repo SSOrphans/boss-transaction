@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.ssor.boss</groupId>
-        <artifactId>boss-transaction</artifactId>
+        <artifactId>boss-transaction-service</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
 
-    <artifactId>boss-transaction-service</artifactId>
+    <artifactId>boss-transaction</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>boss-transaction</name>
     <description>Bank of Smoothstack Account MicroService</description>
