@@ -1,19 +1,12 @@
 package org.ssor.boss.transactions.repository;
 
-import org.hibernate.annotations.Filter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.ssor.boss.core.entity.TransactionType;
 import org.ssor.boss.core.entity.Transaction;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-import springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,25 +48,13 @@ class TransactionRepositoryTest
   @Test
   void test_fetchTransactionsWithoutFilter()
   {
-    Page<Transaction> actual = transactionRepository
+    Page<Transaction> actual1 = transactionRepository
         .findTransactionsByAccountIdWithOptions(2L, "", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
-    assertFalse(actual.isEmpty());
-  }
+    assertFalse(actual1.isEmpty());
 
-  @Test
-  void test_fetchTransactionsWithKeyword()
-  {
-    Page<Transaction> actual = transactionRepository
+    Page<Transaction> actual2 = transactionRepository
         .findTransactionsByAccountIdWithOptions(2L, "te", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
-    assertFalse(actual.isEmpty());
-  }
-
-  @Test
-  void test_fetchTransactionsWithWrongKeyword()
-  {
-    Page<Transaction> actual = transactionRepository
-        .findTransactionsByAccountIdWithOptions(2L, "tu", TransactionType.TRANSACTION_INVALID, PageRequest.of(0, 10));
-    assertTrue(actual.isEmpty());
+    assertFalse(actual2.isEmpty());
   }
 
   @Test

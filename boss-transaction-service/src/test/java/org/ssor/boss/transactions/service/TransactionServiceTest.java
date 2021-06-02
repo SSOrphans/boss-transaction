@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-public class TransactionServiceTest
+class TransactionServiceTest
 {
 
   @MockBean
@@ -38,7 +38,7 @@ public class TransactionServiceTest
   private static Transaction stubbedTransactionA;
   private static Transaction stubbedTransactionB;
   private static Page<Transaction> stubbedTransactions;
-  
+
   private static Optional<Long> stubbedAccountId;
   private static Optional<Long> stubbedBadAccountId;
 
@@ -194,9 +194,9 @@ public class TransactionServiceTest
     Mockito.doReturn(stubbedPagedTransaction).when(transactionRepository).findTransactionsByAccountIdWithOptions(
         Mockito.anyLong(), Mockito.any(), Mockito.any(), Mockito.any()
     );
-    Exception exception = assertThrows(NoTransactionFoundException.class, () -> {
-      transactionService.fetchTransactions(new TransactionOptions(), stubbedBadAccountId);
-    });
+    Exception exception = assertThrows(NoTransactionFoundException.class, () ->
+      transactionService.fetchTransactions(new TransactionOptions(), stubbedBadAccountId)
+    );
 
     String expectedMessage = "No Transaction Found";
     String actualMessage = exception.getMessage();
@@ -223,7 +223,8 @@ public class TransactionServiceTest
     Exception exception = assertThrows(NoTransactionFoundException.class, () ->
         transactionService
             .fetchTransactions(
-                new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID.toString(), "0", "10", "false"),
+                new TransactionOptions("keyTest", "date", TransactionType.TRANSACTION_INVALID.toString(), "0", "10",
+                                       "false"),
                 stubbedBadAccountId)
     );
 
