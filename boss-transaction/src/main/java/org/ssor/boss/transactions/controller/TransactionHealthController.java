@@ -12,6 +12,6 @@ public class TransactionHealthController
 {
   @GetMapping(value = "")
   public ResponseEntity<String> transactionHealth(){
-    return new ResponseEntity<>("Healthy", HttpStatus.OK);
+    return new ResponseEntity<>("", HttpStatus.OK);
   }
 }
