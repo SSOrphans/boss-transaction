@@ -20,6 +20,6 @@ class TransactionHealthControllerTest
   void test_canGetHealthyStatus(){
     var responseEntity = transactionController.transactionHealth();
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    assertEquals("Healthy", responseEntity.getBody());
+    assertEquals("", responseEntity.getBody());
   }
 }

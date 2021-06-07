@@ -2,10 +2,7 @@ package org.ssor.boss.transactions.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.ssor.boss.core.entity.TransactionType;
 import org.ssor.boss.core.exception.NoTransactionFoundException;
 import org.ssor.boss.transactions.service.TransactionOptions;
@@ -19,6 +16,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = { "api/v1/accounts/{accountId}/transactions" },
                 produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+@CrossOrigin
 public class TransactionController
 {
   @Autowired
