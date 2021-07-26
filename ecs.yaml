@@ -120,7 +120,7 @@ Resources:
         - Key: deregistration_delay.timeout_seconds
           Value: '60'
       TargetType: ip
-      VpcId: !Sub '{{resolve:secretsmanager:SOrphans/${ApplicationEnvironment}:SecretString:vpc-id}}'
+      VpcId: !Sub '{{resolve:secretsmanager:SSOrphans/${ApplicationEnvironment}:SecretString:vpc-id}}'
 
   ApiListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -134,5 +134,5 @@ Resources:
       Actions:
         - Type: forward
           TargetGroupArn: !Ref TargetGroup
-      ListenerArn: !Sub '{{resolve:secretsmanager:SOrphans/${ApplicationEnvironment}:SecretString:listener-arn}}'
+      ListenerArn: !Sub '{{resolve:secretsmanager:SSOrphans/${ApplicationEnvironment}:SecretString:listener-arn}}'
       Priority: 12
